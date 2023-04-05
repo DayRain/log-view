@@ -1,0 +1,6 @@
+2023-04-05 15:55:46.216 [main] INFO  com.dayrain.log.LogViewStarter - Starting LogViewStarter using Java 11.0.16.1 on LAPTOP-NH8QDFHE with PID 101700 (E:\demo\java\log-view\target\classes started by peng in E:\demo\java\log-view)
+2023-04-05 15:55:46.217 [main] INFO  com.dayrain.log.LogViewStarter - No active profile set, falling back to 1 default profile: "default"
+2023-04-05 15:55:47.049 [main] INFO  com.dayrain.log.LogViewStarter - Started LogViewStarter in 1.231 seconds (JVM running for 3.718)
+2023-04-05 15:56:29.803 [main] INFO  com.dayrain.log.LogViewStarter - Starting LogViewStarter using Java 11.0.16.1 on LAPTOP-NH8QDFHE with PID 97884 (E:\demo\java\log-view\target\classes started by peng in E:\demo\java\log-view)
+2023-04-05 15:56:29.806 [main] INFO  com.dayrain.log.LogViewStarter - No active profile set, falling back to 1 default profile: "default"
+2023-04-05 15:56:30.576 [main] INFO  com.dayrain.log.LogViewStarter - Started LogViewStarter in 1.107 seconds (JVM running for 2.195)
