@@ -1,7 +1,9 @@
 package com.dayrain.log.entity;
 
+import com.dayrain.log.core.PageAbbr;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 /**
  * 查询结果集
@@ -18,5 +20,9 @@ public class PageGroup {
     /**
      * 结果集
      */
-    private List<Page> pages;
+    private List<PageAbbr> indexes;
+
+    public PageGroup() {
+        indexes = new ArrayList<>();
+    }
 }

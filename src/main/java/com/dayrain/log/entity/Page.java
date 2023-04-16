@@ -8,6 +8,13 @@ package com.dayrain.log.entity;
 public class Page {
     public long fh;
     public long ft;
+    public byte[] bytes;
     public Page pre;
     public Page next;
+
+    public Page(long fh, long ft, byte[] bytes) {
+        this.fh = fh;
+        this.ft = ft;
+        this.bytes = bytes;
+    }
 }
