@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>日志阅读器</title>
+
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <link href="./css/bootstrap-select.min.css" rel="stylesheet">
+    <link href="./css/helper.css" rel="stylesheet">
+</head>
+
+<style>
+    * {
+        margin: 0px;
+        padding: 0px;
+    }
+
+    body {
+        background-color: #EAEAEF;
+    }
+
+    .header {
+        height: 30px;
+        margin-top: 5px;
+    }
+
+    .search {
+        height: 40px;
+        line-height: 40px;
+        margin-top: 2px;
+    }
+
+    .mode-selector {
+        height: 30px;
+    }
+
+    .container {
+        width: 1000px;
+        margin-top: 2px;
+        margin: 0 auto;
+    }
+
+    .stop-div {
+        height: 40px;
+        line-height: 40px;
+    }
+
+    .main-input {
+        width: 250px;
+        height: 30px;
+    }
+
+    .search-range {
+        margin-left: 10px;
+    }
+
+    .start-index,
+    .end-index {
+        width: 60px;
+        height: 30px;
+    }
+
+    .form-check {
+        height: 50px;
+    }
+
+    .path-selector {
+        width: 350px;
+        margin-left: 50px;
+    }
+
+    .log-path {
+        width: 280px;
+    }
+
+    .file-selector {
+        width: 200px;
+        height: 30px;
+        margin-left: 10px;
+    }
+
+    .valid-button {
+        width: 60px;
+    }
+
+    .search button {
+        margin-left: 10px;
+        width: 60px;
+    }
+
+    .search .refresh-history{
+        margin-left: 80px;
+    }
+
+    .content {
+        white-space: pre-line;
+        height: 700px;
+        overflow: scroll;
+        padding: 2px;
+        background-color: antiquewhite;
+    }
+
+    .page {
+        height: 50px;
+        margin-top: 10px;
+    }
+
+
+    .btn-current {
+        margin-right: 100px;
+        width: 200px;
+    }
+
+    .pre-page {
+        margin-left: 10%;
+    }
+
+    .page-input {
+        width: 100px;
+        line-height: 30px;
+    }
+
+    .search-dic {
+        position: fixed;
+        top: 80px;
+        height: 700px;
+        width: 14%;
+        overflow: scroll;
+        border: solid 1px;
+        visibility: hidden;
+        margin-left: 5px;
+    }
+
+    .search-button {
+        position: fixed;
+        top: 150px;
+        right: 100px;
+        visibility: hidden;
+    }
+
+    .search-button .number {
+        text-align: center;
+    }
+
+    .pre-search-button,
+    .next-search-button {
+        margin-top: 10px;
+    }
+
+    .card {
+        margin-top: 5px;
+        background-color: antiquewhite;
+    }
+
+    .card:hover {
+        background-color: gray;
+        cursor: pointer;
+    }
+
+    .search-dic>.card:first-child {
+        margin-top: 10px;
+    }
+
+    .card .card-page {
+        position: absolute;
+        right: 0px;
+    }
+
+    .card .card-body {
+        margin-top: 5px;
+    }
+
+    .highlight {
+        color: red;
+    }
+
+    .stop-div {
+        display: none;
+        text-align: center;
+        margin-top: 5px;
+    }
+
+    .stop-button {
+        width: 300px;
+    }
+
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    /* 滚动条美化 */
+    ::-webkit-scrollbar-track {
+        border-radius: 3px;
+        background: rgba(0, 0, 0, 0.06);
+        -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.08);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 3px;
+        background: rgba(0, 0, 0, 0.12);
+        -webkit-box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+</style>
+
+<script src="./js/jquery-3.6.4.js"> </script>
+<script src="./js/jquery.cookie.js"> </script>
+<script src="./js/bootstrap.bundle.min.js"> </script>
+<script src="./js/bootstrap-select.js"> </script>
+
+<body>
+    <div class="search-dic">
+    </div>
+
+    <div class="container">
+        <div class="header clearfix">
+            <div class="type-radio mode-selector leftfix">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" checked name="log-mode" id="history-type" value="1">
+                    <label class="form-check-label" for="history-type">历史模式</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="log-mode" id="online-type" value="2">
+                    <label class="form-check-label" for="online-type">实时模式</label>
+                </div>
+            </div>
+
+            <div class="path-selector leftfix">
+                <label id="basic-addon1" for="log-path">日志目录</label>
+                <input type="text" name="log-path" class="log-path" placeholder="">
+            </div>
+
+            <div class="file-selector leftfix">
+                <select id="mySelect" class="selectpicker" data-style="btn btn-sm" data-width="180px" data-size="5"
+                    data-live-search="true">
+                </select>
+            </div>
+
+            <div class="valid-div leftfix">
+                <button class="btn btn-sm btn-dark valid-button ">生效</button>
+            </div>
+        </div>
+
+        <!-- <div  style="height: 100px;">a</div> -->
+
+        <div class="search clearfix">
+            <div class="leftfix">
+                <input class="main-input" type="text">
+            </div>
+            <div class="leftfix search-range">
+                <label>搜索范围: </label>
+                <input class="start-index" type="text">—<input class="end-index" type="text">
+            </div>
+            <div class="leftfix">
+                <button class="btn btn-sm btn-dark do-search">搜索</button>
+            </div>
+            <div class="leftfix">
+                <button class="btn btn-sm btn-dark clear-search">清空</button>
+            </div>
+
+            <div class="leftfix">
+                <button class="btn btn-sm btn-dark refresh-history">刷新</button>
+            </div>
+        </div>
+
+        <div class="stop-div clearfix">
+            <button class="btn btn-light btn-current stop-button">打印实时日志中...(点击暂停)</button>
+        </div>
+
+        <div class="content"></div>
+
+        <div class="page">
+            <button class="btn btn-light btn-current">当前页: <span class="current-page">1</span></button>
+            <button class="btn btn-dark pre-page">上一页</button>
+            <button class="btn btn-dark next-page">下一页</button>
+            <button class="btn btn-dark last-page">尾页</button>
+            <input class="page-input" type="text">
+            <button class="btn btn-dark jump-page">跳转</button>
+        </div>
+
+        <div class="footer">
+
+        </div>
+    </div>
+
+    <div class="search-button">
+        <div class="number">
+            <span class="search-current-index">0</span>/<span class="search-total-page">0</span>
+        </div>
+        <div>
+            <button class="btn btn-info pre-search-button">上一个</button>
+        </div>
+        <div>
+            <button class="btn btn-info next-search-button">下一个</button>
+        </div>
+    </div>
+</body>
+
+<script>
+    $(document).ready(function () {
+
+        file_url = ""
+        filePath = ""
+        base_url = "http://localhost:2025"
+        currentPage = 1
+        totalPage = 1
+        modeType = 1
+        highlightArr = []
+        currentHightIndex = 0
+        var timer = null
+
+        function loadNames() {
+            param = {
+                'filePath': filePath
+            }
+            $.ajax(base_url + "/file/file/name/list", {
+                data: JSON.stringify(param),
+                async: false,
+                contentType: 'application/json',
+                type: 'POST'
+            }).done(function (msg) {
+                nameArr = msg['data']
+                if (nameArr.length > 0) {
+                    optionHtml = ''
+                    nameArr.forEach(function (name) {
+                        optionHtml += ' <option value = "' + name + '"> ' + name + ' </option>'
+                    })
+                    $('.selectpicker').html(optionHtml)
+                    console.log('combine')
+                }
+                $('.selectpicker').selectpicker('refresh')
+            })
+        }
+
+        function loadPath() {
+            filePath = $.cookie('filePath')
+            if (filePath) {
+                $('.log-path').val(filePath)
+                loadNames()
+            }
+        }
+
+        $('.log-path').keyup(function (event) {
+            if (event.keyCode == 13) {
+                name = $(".log-path").val()
+                if (name) {
+                    filePath = name
+                    $.cookie('filePath', filePath);
+                    loadPath()
+                }
+            }
+        })
+
+        // 加载日志主体信息
+        function loadContent(pageIndex) {
+            param = {
+                "pageIndex": pageIndex,
+                "fileUrl": file_url
+            }
+
+            $.ajax(base_url + "/view/page/query", {
+                data: JSON.stringify(param),
+                async: false,
+                contentType: 'application/json',
+                type: 'POST'
+            }).done(function (msg) {
+                content = msg['data']
+                $('.content').html("<span>" + content + "</span>")
+            })
+        }
+
+        // 获取总页数
+        function getPageSize() {
+            param = {
+                "fileUrl": file_url
+            }
+
+            $.ajax(base_url + "/view/page/info", {
+                data: JSON.stringify(param),
+                async: false,
+                contentType: 'application/json',
+                type: 'POST'
+            }).done(function (msg) {
+                totalPage = msg['data']['totalPage']
+            })
+        }
+        // 刷新当前页
+        function refreshCurrentPage(cPage) {
+            currentPage = cPage
+            $('.next-page').removeClass('disabled')
+            $('.pre-page').removeClass('disabled')
+
+            if(currentPage >= totalPage) {
+                $('.next-page').addClass('disabled')
+            }
+
+            if(currentPage <= 1) {
+                $('.pre-page').addClass('disabled')
+            }
+
+            loadContent(currentPage)
+            $('.current-page').html(currentPage)
+        }
+
+        // 高亮显示搜索结果
+        function highlight(text, keyword) {
+            tag = 'ph';
+            re = new RegExp(keyword, 'g');
+            if (re.test(text)) {
+                text = text.replace(re, '<' + tag + ' class="highlight">$&</' + tag + '>');
+            }
+            return text;
+        }
+
+        // 取消高亮
+        function unhighlight(text) {
+            tag = 'ph';
+            var re = new RegExp('(<' + tag + '.+?>|<\/' + tag + '>)', 'g');
+            return text.replace(re, '');
+        }
+
+        // 高亮卡片
+        function lightCard() {
+            keyword = $(".search input").val()
+            if (!keyword) {
+                return;
+            }
+
+            cards = $('.card')
+            cards.each(function () {
+                $(this).html(highlight($(this).html(), keyword));
+            })
+        }
+
+        //高亮主体内容
+        function lightContent() {
+            keyword = $(".search input").val()
+            if (!keyword) {
+                return;
+            }
+            $('.content').html(highlight($('.content').html(), keyword));
+        }
+
+        // 搜索结果并渲染
+        function search(keyword) {
+            startIndex = $(".start-index").val()
+            endIndex = $(".end-index").val()
+            if (endIndex - startIndex > 2000) {
+                alert("搜索范围不能大于2000页")
+                return
+            }
+
+            param = {
+                "fileUrl": file_url,
+                "keyword": keyword,
+                "startIndex": startIndex,
+                "endIndex": endIndex
+            }
+
+            $.ajax(base_url + "/view/page/search", {
+                data: JSON.stringify(param),
+                async: false,
+                contentType: 'application/json',
+                type: 'POST'
+            }).done(function (msg) {
+                searchResult = msg['data']
+                console.log(searchResult)
+                $(".search-dic").css('visibility', 'visible')
+                if (10001 == msg['code']) {
+                    $(".search-dic").html("<span>符合条件的数据页有 " + msg['data'] + " 条，请缩小查询范围</span>")
+                } else if (200 == msg['code']) {
+                    arr = searchResult['indexes']
+                    if (arr.length == 0) {
+                        $(".search-dic").html("<span>未查询到符合条件的结果</span>")
+                    } else {
+                        cardString = '<p>共匹配到 ' + arr.length + ' 页</p>'
+                        for (let i = 0; i < arr.length; i++) {
+                            const element = arr[i];
+                            let card1 = '<div class="card"><div class="card-page"><span>第 <span class="card-page-number">'
+                                + element['index'] + '</span> 页</span></div><div class="card-body">'
+                                + element['abbr'] + '</div></div>'
+                            cardString = cardString + "  " + card1
+                        }
+                        $(".search-dic").html(cardString)
+                        lightCard()
+                        lightContent()
+                    }
+                }
+            })
+        }
+
+        // 跳转到高亮
+        function jumpToContentHighLight() {
+            if (highlightArr.length == 0) {
+                return
+            }
+            pos = highlightArr[currentHightIndex] - 500
+            console.log('pos: ' + pos + '  top: ' + $('.content').scrollTop())
+            $('.content').animate({
+                scrollTop: pos
+            }, 500);
+        }
+
+        function appendRealtimeInfo(realtimeInfo) {
+            $('.content').append(realtimeInfo)
+            console.log($('.content').prop("scrollHeight"))
+            $('.content').animate({
+                scrollTop: $('.content').prop("scrollHeight")
+            }, 1);
+        }
+
+        //加载并渲染实时数据
+        function loadRealtimeData() {
+            param = {
+                "fileUrl": file_url
+            }
+            console.log('realtime ' + file_url)
+            $.ajax(base_url + "/view/realtime", {
+                data: JSON.stringify(param),
+                async: false,
+                contentType: 'application/json',
+                type: 'POST'
+            }).done(function (msg) {
+                content = msg['data']
+                if (content) {
+                    console.log(content)
+                    appendRealtimeInfo(content)
+                }
+            })
+        }
+
+        function refreshLastIndex() {
+            param = {
+                "fileUrl": file_url
+            }
+            $.ajax(base_url + "/view/refresh", {
+                data: JSON.stringify(param),
+                async: false,
+                contentType: 'application/json',
+                type: 'POST'
+            }).done(function (msg) {
+
+            })
+        }
+
+        // 执行搜索
+        $(".search .do-search").click(function (e) {
+            searchContent = $(".search input").val()
+            search(searchContent)
+        })
+
+        // 清空搜索
+        $(".search .clear-search").click(function (e) {
+            $(".search input").val(' ')
+            $(".search-button").css('visibility', 'hidden')
+            $(".search-dic").css('visibility', 'hidden')
+        })
+
+        $("#total_page").html(totalPage)
+
+        // 上一页
+        $('.pre-page').click(function (e) {
+            refreshCurrentPage(currentPage - 1)
+        })
+
+        // 下一页
+        $('.next-page').click(function (e) {
+            refreshCurrentPage(currentPage + 1)
+        })
+
+        // 尾页
+        $('.last-page').click(function (e) {
+            refreshCurrentPage(totalPage)
+        })
+
+        // 跳转
+        $('.jump-page').click(function (e) {
+            inputPage = $(".page-input").val()
+            if (inputPage < 1) {
+                inputPage = 1
+            } else if (inputPage > totalPage) {
+                inputPage = totalPage
+            }
+            refreshCurrentPage(inputPage)
+        })
+
+        function updateHightIndex(number) {
+            if (number >= highlightArr.length) {
+                number = 0;
+            }
+
+            if (number < 0) {
+                number = highlight.length - 1
+            }
+
+            currentHightIndex = number
+            jumpToContentHighLight()
+
+            $('.search-current-index').html(currentHightIndex + 1)
+            $('.search-total-page').html(highlightArr.length)
+        }
+
+        //点击搜索结果的卡片
+        $(".search-dic").on('click', '.card', function () {
+            pageNumber = $(this).find('.card-page-number').html()
+            refreshCurrentPage(pageNumber)
+            lightContent()
+            resultEles = $(".content").find("ph")
+            highlightArr = []
+            $('.content').animate({
+                scrollTop: 0
+            }, 1);
+            for (i = 0; i < resultEles.length; i++) {
+                highlightArr.push(resultEles.eq(i).offset().top);
+            }
+            updateHightIndex(0)
+
+            $(".search-button").css('visibility', 'visible')
+        })
+
+        //搜索框回车
+        $('.search input').keyup(function (event) {
+            if (event.keyCode == 13) {
+                searchContent = $(".search input").val()
+                search(searchContent)
+            }
+        });
+
+        $(".main-input").bind("input propertychange", function (event) {
+            searchContent = $(".main-input").val()
+
+            if (!searchContent) {
+                $(".search-button").css('visibility', 'hidden')
+                $(".search-dic").css('visibility', 'hidden')
+            }
+        });
+
+        $('.pre-search-button').click(function (e) {
+            updateHightIndex(currentHightIndex - 1)
+        })
+
+        $('.next-search-button').click(function (e) {
+            updateHightIndex(currentHightIndex + 1)
+        })
+
+        function startRealtime() {
+            timer = setInterval(() => {
+                loadRealtimeData()
+            }, 2000);
+        }
+
+        function stopRealtime() {
+            clearInterval(timer)
+        }
+
+        function initHistoryPage() {
+            if (!filePath) {
+                $('.next-page').addClass('disabled')
+                $('.pre-page').addClass('disabled')
+                return
+            }
+            // 加载总页数
+            getPageSize()
+            // 默认显示最后一页
+            refreshCurrentPage(totalPage)
+            //初始化搜索范围
+            $('.start-index').val(Math.max(1, totalPage - 2000))
+            $('.end-index').val(totalPage)
+        }
+
+        function switchToHistoryMode() {
+            if (timer) {
+                stopRealtime()
+            }
+            $('.search').show()
+            $('.page').show()
+            $('.stop-div').hide()
+            initHistoryPage()
+        }
+
+        $('.stop-button').click(function (e) {
+            name = $(this).text()
+            if (name == '打印实时日志中...(点击暂停)') {
+                $(this).text('暂停中...(点击继续)')
+                stopRealtime()
+            } else if (name == '暂停中...(点击继续)') {
+                $(this).text('打印实时日志中...(点击暂停)')
+                startRealtime()
+            }
+        })
+
+        $('.refresh-history').click(function(e) {
+            refreshLastIndex()
+            initHistoryPage()
+        })
+
+        function switchToRealtimeMode() {
+            $('.search').hide()
+            $('.page').hide()
+            $('.content').html('')
+            $('.stop-div').show()
+
+            refreshLastIndex()
+            loadRealtimeData()
+            startRealtime()
+        }
+
+        $('input[type=radio][name=log-mode]').change(function () {
+            if (this.value == 1) {
+                modeType = 1
+                switchToHistoryMode()
+            }
+            else if (this.value == 2) {
+                modeType = 2
+                switchToRealtimeMode()
+            }
+        });
+
+        function initFileUrl() {
+            fileName = $('select').find("option:selected").val()
+            file_url = filePath + "\\" + fileName
+        }
+
+        $('.valid-button').on('click', function (e) {
+            initFileUrl()
+            if (modeType == 1) {
+                initHistoryPage()
+            }
+        });
+
+        //加载cookie路径
+        loadPath()
+
+        //初始化
+        initFileUrl()
+
+        // 默认是历史模式
+        switchToHistoryMode()
+    })
+</script>
+
+</html>

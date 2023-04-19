@@ -33,6 +33,7 @@ public class ViewController {
         String fileUrl = jsonParam.getString("fileUrl");
         PageControl control = getControl(NetUtils.getIpAddr(request), fileUrl);
         Page page = control.getPage(pageIndex - 1);
+        System.out.println(pageIndex - 1);
         return R.success(new String(page.bytes));
     }
 
@@ -49,9 +50,11 @@ public class ViewController {
     public R search(HttpServletRequest request, @RequestBody JsonParam jsonParam) throws FileNotFoundException {
         String fileUrl = jsonParam.getString("fileUrl");
         String keyword = jsonParam.getString("keyword");
+        long startIndex = jsonParam.getLong("startIndex");
+        long endIndex = jsonParam.getLong("endIndex");
         PageControl control = getControl(NetUtils.getIpAddr(request), fileUrl);
         JdkFindEngine jdkFindEngine = new JdkFindEngine();
-        PageGroup pageGroup = jdkFindEngine.find(control, keyword);
+        PageGroup pageGroup = jdkFindEngine.find(control, startIndex, endIndex, keyword);
         if (pageGroup.getIndexes().size() > 5000) {
             return R.fail(ServerCode.OVERFLOW, pageGroup.getIndexes().size(), "结果超过5000条");
         }

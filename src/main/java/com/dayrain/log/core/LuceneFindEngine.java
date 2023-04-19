@@ -9,7 +9,7 @@ import com.dayrain.log.entity.PageGroup;
  */
 public class LuceneFindEngine implements FindEngine{
     @Override
-    public PageGroup find(PageControl pageControl, String keyword) {
+    public PageGroup find(PageControl pageControl, long startIndex, long endIndex, String keyword) {
         return null;
     }
 }

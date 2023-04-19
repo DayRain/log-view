@@ -14,5 +14,5 @@ public interface FindEngine {
      * @param keyword 关键词
      * @return 结果集
      */
-    PageGroup find(PageControl pageControl, String keyword);
+    PageGroup find(PageControl pageControl, long startIndex, long endIndex, String keyword);
 }

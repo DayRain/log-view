@@ -10,19 +10,19 @@ import com.dayrain.log.entity.PageGroup;
  */
 public class JdkFindEngine implements FindEngine{
     @Override
-    public PageGroup find(PageControl pageControl, String keyword) {
+    public PageGroup find(PageControl pageControl, long startIndex, long endIndex, String keyword) {
 
         long totalPage = pageControl.getTotalPage();
         PageGroup pageGroup = new PageGroup();
         long start = System.currentTimeMillis();
-        for (long i = 0; i < totalPage; i++) {
+        for (long i = Math.max(startIndex, 0); i < Math.min(totalPage, endIndex + 1); i++) {
             Page page = pageControl.getPage(i);
             String content = new String(page.bytes);
             if(content.contains(keyword)) {
                 //获取缩写
-                int startIndex = content.indexOf(keyword);
-                int endIndex = startIndex + keyword.length();
-                String abbr = content.substring(Math.max(0, startIndex - 64), Math.min(content.length(), endIndex + 64));
+                int shortStart = content.indexOf(keyword);
+                int shortEnd = shortStart + keyword.length();
+                String abbr = content.substring(Math.max(0, shortStart - 64), Math.min(content.length(), shortEnd + 64));
                 pageGroup.getIndexes().add(new PageAbbr(i + 1, abbr));
             }
         }
