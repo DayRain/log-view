@@ -89,7 +89,7 @@
         width: 60px;
     }
 
-    .search .refresh-history{
+    .search .refresh-history {
         margin-left: 80px;
     }
 
@@ -210,91 +210,91 @@
 <script src="./js/bootstrap-select.js"> </script>
 
 <body>
-    <div class="search-dic">
-    </div>
+<div class="search-dic">
+</div>
 
-    <div class="container">
-        <div class="header clearfix">
-            <div class="type-radio mode-selector leftfix">
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" checked name="log-mode" id="history-type" value="1">
-                    <label class="form-check-label" for="history-type">历史模式</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="log-mode" id="online-type" value="2">
-                    <label class="form-check-label" for="online-type">实时模式</label>
-                </div>
+<div class="container">
+    <div class="header clearfix">
+        <div class="type-radio mode-selector leftfix">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" checked name="log-mode" id="history-type" value="1">
+                <label class="form-check-label" for="history-type">历史模式</label>
             </div>
-
-            <div class="path-selector leftfix">
-                <label id="basic-addon1" for="log-path">日志目录</label>
-                <input type="text" name="log-path" class="log-path" placeholder="">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="log-mode" id="online-type" value="2">
+                <label class="form-check-label" for="online-type">实时模式</label>
             </div>
+        </div>
 
-            <div class="file-selector leftfix">
-                <select id="mySelect" class="selectpicker" data-style="btn btn-sm" data-width="180px" data-size="5"
+        <div class="path-selector leftfix">
+            <label id="basic-addon1" for="log-path">日志目录</label>
+            <input type="text" name="log-path" class="log-path" placeholder="">
+        </div>
+
+        <div class="file-selector leftfix">
+            <select id="mySelect" class="selectpicker" data-style="btn btn-sm" data-width="180px" data-size="5"
                     data-live-search="true">
-                </select>
-            </div>
-
-            <div class="valid-div leftfix">
-                <button class="btn btn-sm btn-dark valid-button ">生效</button>
-            </div>
+            </select>
         </div>
 
-        <!-- <div  style="height: 100px;">a</div> -->
-
-        <div class="search clearfix">
-            <div class="leftfix">
-                <input class="main-input" type="text">
-            </div>
-            <div class="leftfix search-range">
-                <label>搜索范围: </label>
-                <input class="start-index" type="text">—<input class="end-index" type="text">
-            </div>
-            <div class="leftfix">
-                <button class="btn btn-sm btn-dark do-search">搜索</button>
-            </div>
-            <div class="leftfix">
-                <button class="btn btn-sm btn-dark clear-search">清空</button>
-            </div>
-
-            <div class="leftfix">
-                <button class="btn btn-sm btn-dark refresh-history">刷新</button>
-            </div>
-        </div>
-
-        <div class="stop-div clearfix">
-            <button class="btn btn-light btn-current stop-button">打印实时日志中...(点击暂停)</button>
-        </div>
-
-        <div class="content"></div>
-
-        <div class="page">
-            <button class="btn btn-light btn-current">当前页: <span class="current-page">1</span></button>
-            <button class="btn btn-dark pre-page">上一页</button>
-            <button class="btn btn-dark next-page">下一页</button>
-            <button class="btn btn-dark last-page">尾页</button>
-            <input class="page-input" type="text">
-            <button class="btn btn-dark jump-page">跳转</button>
-        </div>
-
-        <div class="footer">
-
+        <div class="valid-div leftfix">
+            <button class="btn btn-sm btn-dark valid-button ">生效</button>
         </div>
     </div>
 
-    <div class="search-button">
-        <div class="number">
-            <span class="search-current-index">0</span>/<span class="search-total-page">0</span>
+    <!-- <div  style="height: 100px;">a</div> -->
+
+    <div class="search clearfix">
+        <div class="leftfix">
+            <input class="main-input" type="text">
         </div>
-        <div>
-            <button class="btn btn-info pre-search-button">上一个</button>
+        <div class="leftfix search-range">
+            <label>搜索范围: </label>
+            <input class="start-index" type="text">—<input class="end-index" type="text">
         </div>
-        <div>
-            <button class="btn btn-info next-search-button">下一个</button>
+        <div class="leftfix">
+            <button class="btn btn-sm btn-dark do-search">搜索</button>
+        </div>
+        <div class="leftfix">
+            <button class="btn btn-sm btn-dark clear-search">清空</button>
+        </div>
+
+        <div class="leftfix">
+            <button class="btn btn-sm btn-dark refresh-history">刷新</button>
         </div>
     </div>
+
+    <div class="stop-div clearfix">
+        <button class="btn btn-light btn-current stop-button">打印实时日志中...(点击暂停)</button>
+    </div>
+
+    <div class="content"></div>
+
+    <div class="page">
+        <button class="btn btn-light btn-current">当前页: <span class="current-page">1</span></button>
+        <button class="btn btn-dark pre-page">上一页</button>
+        <button class="btn btn-dark next-page">下一页</button>
+        <button class="btn btn-dark last-page">尾页</button>
+        <input class="page-input" type="text">
+        <button class="btn btn-dark jump-page">跳转</button>
+    </div>
+
+    <div class="footer">
+
+    </div>
+</div>
+
+<div class="search-button">
+    <div class="number">
+        <span class="search-current-index">0</span>/<span class="search-total-page">0</span>
+    </div>
+    <div>
+        <button class="btn btn-info pre-search-button">上一个</button>
+    </div>
+    <div>
+        <button class="btn btn-info next-search-button">下一个</button>
+    </div>
+</div>
 </body>
 
 <script>
@@ -327,10 +327,10 @@
                         optionHtml += ' <option value = "' + name + '"> ' + name + ' </option>'
                     })
                     $('.selectpicker').html(optionHtml)
-                    console.log('combine')
+                    $('.selectpicker').selectpicker('refresh');
                 }
-                $('.selectpicker').selectpicker('refresh')
             })
+
         }
 
         function loadPath() {
@@ -346,7 +346,7 @@
                 name = $(".log-path").val()
                 if (name) {
                     filePath = name
-                    $.cookie('filePath', filePath);
+                    $.cookie('filePath', filePath, { expires: 365, path: '/' });
                     loadPath()
                 }
             }
@@ -391,11 +391,11 @@
             $('.next-page').removeClass('disabled')
             $('.pre-page').removeClass('disabled')
 
-            if(currentPage >= totalPage) {
+            if (currentPage >= totalPage) {
                 $('.next-page').addClass('disabled')
             }
 
-            if(currentPage <= 1) {
+            if (currentPage <= 1) {
                 $('.pre-page').addClass('disabled')
             }
 
@@ -690,7 +690,7 @@
             }
         })
 
-        $('.refresh-history').click(function(e) {
+        $('.refresh-history').click(function (e) {
             refreshLastIndex()
             initHistoryPage()
         })

@@ -1,6 +1,6 @@
 package com.dayrain.log.core;
 
-import com.dayrain.log.entity.SystemConfig;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileNotFoundException;
 import java.util.HashMap;
@@ -13,16 +13,16 @@ import java.util.Map;
  * @version 3.0.0
  * @date 2023/4/5
  */
+@Slf4j
 public class PageControlGroup {
 
     private static Map<LinkCredential, PageControl> pageControls = new HashMap<>();
-
-    private static SystemConfig systemConfig;
 
     public static synchronized PageControl getControl(LinkCredential linkCredential) throws FileNotFoundException {
         PageControl pageControl = pageControls.getOrDefault(linkCredential, null);
         if (pageControl == null) {
             pageControl = new PageControl(linkCredential.getFileUrl(), PageConstants.PAGE_SIZE);
+            log.info("add control, {}, exists: {}", pageControl, pageControls);
             pageControls.put(linkCredential, pageControl);
         }
         return pageControl;

@@ -17,29 +17,20 @@ public class LogViewStarter {
     public static void main(String[] args) {
         SpringApplication.run(LogViewStarter.class, args);
         new Thread(()->{
-            Map<LinkCredential, PageControl> map = PageControlGroup.getControlMap();
-            for (LinkCredential key : map.keySet()) {
-                PageControl pageControl = map.get(key);
-                if(!pageControl.isValid()) {
-                    map.remove(key);
+            while (true) {
+                Map<LinkCredential, PageControl> map = PageControlGroup.getControlMap();
+                for (LinkCredential key : map.keySet()) {
+                    PageControl pageControl = map.get(key);
+                    if(!pageControl.isValid()) {
+                        map.remove(key);
+                    }
+                }
+                try {
+                    TimeUnit.HOURS.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
-            try {
-                TimeUnit.HOURS.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }).start();
-
-//        new Thread(()->{
-//            while (true) {
-//                log.info("实时数据test : " + new Date());
-//                try {
-//                    TimeUnit.SECONDS.sleep(1);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
     }
 }
