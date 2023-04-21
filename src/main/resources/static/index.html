@@ -158,7 +158,7 @@
         cursor: pointer;
     }
 
-    .search-dic>.card:first-child {
+    .search-dic > .card:first-child {
         margin-top: 10px;
     }
 
@@ -204,10 +204,10 @@
     }
 </style>
 
-<script src="./js/jquery-3.6.4.js"> </script>
-<script src="./js/jquery.cookie.js"> </script>
-<script src="./js/bootstrap.bundle.min.js"> </script>
-<script src="./js/bootstrap-select.js"> </script>
+<script src="./js/jquery-3.6.4.js"></script>
+<script src="./js/jquery.cookie.js"></script>
+<script src="./js/bootstrap.bundle.min.js"></script>
+<script src="./js/bootstrap-select.js"></script>
 
 <body>
 <div class="search-dic">
@@ -302,14 +302,13 @@
 
         file_url = ""
         filePath = ""
-        base_url = "http://localhost:2025"
+        base_url = "http://" + window.location.hostname + ":" + window.location.port
         currentPage = 1
         totalPage = 1
         modeType = 1
         highlightArr = []
         currentHightIndex = 0
         var timer = null
-
         function loadNames() {
             param = {
                 'filePath': filePath
@@ -346,7 +345,7 @@
                 name = $(".log-path").val()
                 if (name) {
                     filePath = name
-                    $.cookie('filePath', filePath, { expires: 365, path: '/' });
+                    $.cookie('filePath', filePath, {expires: 365, path: '/'});
                     loadPath()
                 }
             }
@@ -385,6 +384,7 @@
                 totalPage = msg['data']['totalPage']
             })
         }
+
         // 刷新当前页
         function refreshCurrentPage(cPage) {
             currentPage = cPage
@@ -647,7 +647,7 @@
         function startRealtime() {
             timer = setInterval(() => {
                 loadRealtimeData()
-            }, 2000);
+            }, 1000);
         }
 
         function stopRealtime() {
@@ -710,8 +710,7 @@
             if (this.value == 1) {
                 modeType = 1
                 switchToHistoryMode()
-            }
-            else if (this.value == 2) {
+            } else if (this.value == 2) {
                 modeType = 2
                 switchToRealtimeMode()
             }
@@ -719,7 +718,11 @@
 
         function initFileUrl() {
             fileName = $('select').find("option:selected").val()
-            file_url = filePath + "\\" + fileName
+            if(filePath.startsWith('/')) {
+                file_url = filePath + "/" + fileName
+            }else {
+                file_url = filePath + "\\" + fileName
+            }
         }
 
         $('.valid-button').on('click', function (e) {

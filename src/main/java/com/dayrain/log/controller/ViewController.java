@@ -2,11 +2,11 @@ package com.dayrain.log.controller;
 
 import com.dayrain.log.core.JdkFindEngine;
 import com.dayrain.log.core.LinkCredential;
+import com.dayrain.log.core.PageControl;
+import com.dayrain.log.core.PageControlGroup;
 import com.dayrain.log.core.constants.ServerCode;
 import com.dayrain.log.core.utils.JsonUtils;
 import com.dayrain.log.core.utils.NetUtils;
-import com.dayrain.log.core.PageControl;
-import com.dayrain.log.core.PageControlGroup;
 import com.dayrain.log.entity.JsonParam;
 import com.dayrain.log.entity.Page;
 import com.dayrain.log.entity.PageGroup;
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.FileNotFoundException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 
 @Slf4j
@@ -34,7 +35,7 @@ public class ViewController {
         PageControl control = getControl(NetUtils.getIpAddr(request), fileUrl);
         Page page = control.getPage(pageIndex - 1);
         System.out.println(pageIndex - 1);
-        return R.success(new String(page.bytes));
+        return R.success(new String(page.bytes, StandardCharsets.UTF_8));
     }
 
     @PostMapping("/page/info")

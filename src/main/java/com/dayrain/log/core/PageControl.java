@@ -5,11 +5,10 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileNotFoundException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -59,7 +58,7 @@ public class PageControl {
 
         byte[] bytes = reader.readBytes(fileSize, realtimeSize);
         fileSize = realtimeSize;
-        return new String(bytes);
+        return new String(bytes, StandardCharsets.UTF_8);
     }
 
     private void updateTime() {

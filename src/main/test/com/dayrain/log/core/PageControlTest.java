@@ -15,8 +15,5 @@ class PageControlTest {
         PageControl pageControl =
                 new PageControl("E:\\java\\project\\log-view\\logs\\info_2023-04-02.log", 4096);
         Page page = pageControl.getPage(1000);
-        String result = new String(page.bytes);
-        System.out.println(result);
-        System.out.println(new String(pageControl.getPage(1001).bytes));
     }
 }

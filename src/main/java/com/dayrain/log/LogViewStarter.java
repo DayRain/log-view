@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 @Slf4j
@@ -22,6 +21,7 @@ public class LogViewStarter {
                 for (LinkCredential key : map.keySet()) {
                     PageControl pageControl = map.get(key);
                     if(!pageControl.isValid()) {
+                        log.info("remove control, {}", pageControl);
                         map.remove(key);
                     }
                 }
