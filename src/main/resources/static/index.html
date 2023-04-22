@@ -21,8 +21,16 @@
     }
 
     .header {
-        height: 30px;
+        height: 33px;
         margin-top: 5px;
+    }
+
+    .size-selector {
+        width: 120px;
+        height: 32px;
+        font-size: 15px;
+        margin-top: 5px;
+        margin-left: 10px;
     }
 
     .search {
@@ -67,7 +75,7 @@
 
     .path-selector {
         width: 350px;
-        margin-left: 50px;
+        margin-left: 10px;
     }
 
     .log-path {
@@ -77,7 +85,7 @@
     .file-selector {
         width: 200px;
         height: 30px;
-        margin-left: 10px;
+        margin-left: 5px;
     }
 
     .valid-button {
@@ -158,7 +166,7 @@
         cursor: pointer;
     }
 
-    .search-dic > .card:first-child {
+    .search-dic>.card:first-child {
         margin-top: 10px;
     }
 
@@ -184,6 +192,8 @@
     .stop-button {
         width: 300px;
     }
+
+
 
     ::-webkit-scrollbar {
         width: 6px;
@@ -252,6 +262,16 @@
             <label>搜索范围: </label>
             <input class="start-index" type="text">—<input class="end-index" type="text">
         </div>
+
+        <div class="leftfix">
+            <select class="form-select size-selector leftfix" aria-label="Default select example">
+                <option selected value="1048576">1048576</option>
+                <option value="131072">131072</option>
+                <option value="262144">262144</option>
+                <option value="524288">524288</option>
+                <option value="2097152">2097152</option>
+            </select>
+        </div>
         <div class="leftfix">
             <button class="btn btn-sm btn-dark do-search">搜索</button>
         </div>
@@ -302,12 +322,14 @@
 
         file_url = ""
         filePath = ""
-        base_url = "http://" + window.location.hostname + ":" + window.location.port
+        // base_url = "http://" + window.location.hostname + ":" + window.location.port
+        base_url = "http://" + window.location.hostname + ":" + 2025
         currentPage = 1
         totalPage = 1
         modeType = 1
         highlightArr = []
         currentHightIndex = 0
+        currentPageSize = 1048576
         var timer = null
         function loadNames() {
             param = {
@@ -337,6 +359,12 @@
             if (filePath) {
                 $('.log-path').val(filePath)
                 loadNames()
+                cps = $.cookie('currentPageSize')
+                if (cps) {
+                    currentPageSize = cps
+                    $('.size-selector').removeAttr("selected");
+                    $('.size-selector').val(currentPageSize).change();
+                }
             }
         }
 
@@ -345,7 +373,7 @@
                 name = $(".log-path").val()
                 if (name) {
                     filePath = name
-                    $.cookie('filePath', filePath, {expires: 365, path: '/'});
+                    $.cookie('filePath', filePath, { expires: 365, path: '/' });
                     loadPath()
                 }
             }
@@ -355,7 +383,8 @@
         function loadContent(pageIndex) {
             param = {
                 "pageIndex": pageIndex,
-                "fileUrl": file_url
+                "fileUrl": file_url,
+                "pageSize": currentPageSize,
             }
 
             $.ajax(base_url + "/view/page/query", {
@@ -382,6 +411,7 @@
                 type: 'POST'
             }).done(function (msg) {
                 totalPage = msg['data']['totalPage']
+                console.log(totalPage)
             })
         }
 
@@ -585,6 +615,8 @@
             refreshCurrentPage(inputPage)
         })
 
+
+
         function updateHightIndex(number) {
             if (number >= highlightArr.length) {
                 number = 0;
@@ -679,6 +711,28 @@
             initHistoryPage()
         }
 
+        $('.size-selector').on('change', function (e) {
+            currentPageSize = this.value
+            $.cookie('currentPageSize', currentPageSize, { expires: 365, path: '/' });
+            if (file_url) {
+
+                param = {
+                    "fileUrl": file_url,
+                    "pageSize": currentPageSize
+                }
+                $.ajax(base_url + "/view/pagesize/refresh", {
+                    data: JSON.stringify(param),
+                    async: false,
+                    contentType: 'application/json',
+                    type: 'POST'
+                }).done(function (msg) {
+
+                })
+
+                switchToHistoryMode()
+            }
+        });
+
         $('.stop-button').click(function (e) {
             name = $(this).text()
             if (name == '打印实时日志中...(点击暂停)') {
@@ -718,9 +772,9 @@
 
         function initFileUrl() {
             fileName = $('select').find("option:selected").val()
-            if(filePath.startsWith('/')) {
+            if (filePath.startsWith('/')) {
                 file_url = filePath + "/" + fileName
-            }else {
+            } else {
                 file_url = filePath + "\\" + fileName
             }
         }

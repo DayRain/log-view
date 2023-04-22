@@ -32,10 +32,27 @@ public class ViewController {
     public R query(HttpServletRequest request, @RequestBody JsonParam jsonParam) throws FileNotFoundException {
         long pageIndex = jsonParam.getLong("pageIndex");
         String fileUrl = jsonParam.getString("fileUrl");
+        long pageSize = jsonParam.getLong("pageSize");
         PageControl control = getControl(NetUtils.getIpAddr(request), fileUrl);
+        if(pageSize != control.getPageSize()) {
+            control.setPageSize(pageSize);
+            control.refresh();
+        }
         Page page = control.getPage(pageIndex - 1);
         System.out.println(pageIndex - 1);
         return R.success(new String(page.bytes, StandardCharsets.UTF_8));
+    }
+
+    @PostMapping("/pagesize/refresh")
+    public R pageSizeRefresh(HttpServletRequest request, @RequestBody JsonParam jsonParam) throws FileNotFoundException {
+        String fileUrl = jsonParam.getString("fileUrl");
+        long pageSize = jsonParam.getLong("pageSize");
+        PageControl control = getControl(NetUtils.getIpAddr(request), fileUrl);
+        if(pageSize != control.getPageSize()) {
+            control.setPageSize(pageSize);
+            control.refresh();
+        }
+        return R.success();
     }
 
     @PostMapping("/page/info")
@@ -55,7 +72,7 @@ public class ViewController {
         long endIndex = jsonParam.getLong("endIndex");
         PageControl control = getControl(NetUtils.getIpAddr(request), fileUrl);
         JdkFindEngine jdkFindEngine = new JdkFindEngine();
-        PageGroup pageGroup = jdkFindEngine.find(control, startIndex, endIndex, keyword);
+        PageGroup pageGroup = jdkFindEngine.find(control, startIndex - 1, endIndex - 1, keyword);
         if (pageGroup.getIndexes().size() > 5000) {
             return R.fail(ServerCode.OVERFLOW, pageGroup.getIndexes().size(), "结果超过5000条");
         }

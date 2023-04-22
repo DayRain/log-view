@@ -18,7 +18,7 @@ public class JdkFindEngine implements FindEngine{
         long totalPage = pageControl.getTotalPage();
         PageGroup pageGroup = new PageGroup();
         long start = System.currentTimeMillis();
-        for (long i = Math.max(startIndex, 0); i < Math.min(totalPage, endIndex + 1); i++) {
+        for (long i = Math.max(startIndex, 0); i <= Math.min(totalPage - 1, endIndex); i++) {
             Page page = pageControl.getPage(i);
             String content = new String(page.bytes, StandardCharsets.UTF_8);
             if(content.contains(keyword)) {
