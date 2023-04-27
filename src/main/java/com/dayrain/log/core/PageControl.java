@@ -58,6 +58,7 @@ public class PageControl {
 
         byte[] bytes = reader.readBytes(fileSize, realtimeSize);
         fileSize = realtimeSize;
+        updateTime();
         return new String(bytes, StandardCharsets.UTF_8);
     }
 

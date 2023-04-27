@@ -34,6 +34,14 @@ public class FileController {
         Arrays.sort(names, new Comparator<String>() {
             @Override
             public int compare(String o1, String o2) {
+                //info排前面
+                if(o1.startsWith("info") && o2.startsWith("sys")) {
+                    return -1;
+                }
+
+                if(o1.startsWith("sys") && o2.startsWith("info")) {
+                    return 1;
+                }
                 return o2.compareTo(o1);
             }
         });

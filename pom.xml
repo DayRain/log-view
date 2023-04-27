@@ -15,8 +15,8 @@
     <version>0.0.1</version>
 
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -50,9 +50,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
-                <configuration>
-                    <release>11</release>
-                </configuration>
+<!--                <configuration>-->
+<!--                    <release>8</release>-->
+<!--                </configuration>-->
             </plugin>
         </plugins>
     </build>
